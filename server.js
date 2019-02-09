@@ -2,32 +2,34 @@ const express = require('express')
 const fs = require('fs')
 const hbs = require('hbs')
 var app = express()
+var port = process.env.PORT || 7000 // for deployment to heroku
 
-hbs.registerPartials(__dirname+'/views/partials/')
-app.set('view engine','hbs')
+hbs.registerPartials(__dirname + '/views/partials/')
+app.set('view engine', 'hbs')
 
-app.use((req,res,next) => {
+app.use((req, res, next) => {
     var now = new Date().toString()
     var log = `${now} : ${req.method} - ${req.url}`
     console.log(log)
-    fs.appendFile('server.log',log, (err) => {
-        if(err){
+
+    fs.appendFile('server.log', log, (err) => {
+        if (err) {
             console.log('Unabble to write to Server log file.')
         }
-     })
-   next()
-   
+    })
+    next()
+
 })
 /* app.use((req,res,next) => {
     res.render('maintenance.hbs')
 }) */
-app.use(express.static(__dirname+'/public'));
+app.use(express.static(__dirname + '/public'));
 
-hbs.registerHelper('getCurrentYear',() => {
-  return new Date().getFullYear()
+hbs.registerHelper('getCurrentYear', () => {
+    return new Date().getFullYear()
 })
-hbs.registerHelper('screamIt',(data) => {
-      return data.toUpperCase()
+hbs.registerHelper('screamIt', (data) => {
+    return data.toUpperCase()
 })
 
 var tempEng = {
@@ -35,20 +37,20 @@ var tempEng = {
     welcomeMessage: 'Welcome to Web Page',
     currentYear: new Date().getFullYear()
 }
-app.get('/', (req,res) => {
+app.get('/', (req, res) => {
     tempEng.pageTitle = 'Home Page'
     res.render('home', tempEng)
 })
-app.get('/about',(req,res) => {
-       //res.send('About Page!!')
-       tempEng.pageTitle = 'About Page'
-       res.render('about.hbs', tempEng)
+app.get('/about', (req, res) => {
+    //res.send('About Page!!')
+    tempEng.pageTitle = 'About Page'
+    res.render('about.hbs', tempEng)
 })
-app.get('/bad', (req,res) => {
+app.get('/bad', (req, res) => {
     res.send({
         "errorMessage": "Unable to Handle Request - Error Hanadling Request"
     })
 })
-app.listen(7000, () => {
-    console.log('App is listening on 7000')
+app.listen(port, () => {
+    console.log(`App is listening on ${port}`)
 })
