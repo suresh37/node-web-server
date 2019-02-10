@@ -46,6 +46,10 @@ app.get('/about', (req, res) => {
     tempEng.pageTitle = 'About Page'
     res.render('about.hbs', tempEng)
 })
+app.get('/projects', (req, res) => {
+    tempEng.pageTitle = 'Projects Page'
+    res.render('projects', tempEng)
+})
 app.get('/bad', (req, res) => {
     res.send({
         "errorMessage": "Unable to Handle Request - Error Hanadling Request"
